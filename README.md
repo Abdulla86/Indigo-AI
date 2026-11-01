@@ -1,6 +1,6 @@
 # Indigo.ai
 
-_Enterprise Structured Ingestion Firewall_
+_Intelligent Message Processing & Response Platform_
 
 A beginner-friendly AI project. You chat with **Indigo.ai**, an AI assistant in a React web app, and for every message the backend:
 

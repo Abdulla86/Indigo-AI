@@ -3,7 +3,7 @@ from groq import Groq
 
 from app.config import GROQ_API_KEY, GROQ_MODEL
 from app.schemas.ingestion import IngestionResult
-
+from app.utils.token_counter import record_usage
 
 
 SYSTEM_PROMPT = """
@@ -34,7 +34,8 @@ The summary must briefly describe the user's request without inventing facts.
 """
 
 
-def analyze_message(message: str) -> IngestionResult:
+def analyze_message(message: str, usage: dict | None = None) -> IngestionResult:
+    """Classify the message. If `usage` is a dict, it is filled with this call's token counts."""
     if not GROQ_API_KEY:
         raise RuntimeError(
             "GROQ_API_KEY is missing. Add it to backend/.env before using the LLM."
@@ -46,16 +47,16 @@ def analyze_message(message: str) -> IngestionResult:
         mode=instructor.Mode.JSON,
     )
 
-    result = structured_client.chat.completions.create(
+    # create_with_completion also returns Groq's raw response, which includes token usage.
+    result, completion = structured_client.chat.completions.create_with_completion(
         model=GROQ_MODEL,
-        response_model= IngestionResult,
-        temperature=0,   # here temperature=0 means deterministic output; increase for more creativity
+        response_model=IngestionResult,
+        temperature=0,
         max_retries=2,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": message},
         ],
     )
+    record_usage(usage, getattr(completion, "usage", None), SYSTEM_PROMPT + message, result.model_dump_json())
     return result
-
-

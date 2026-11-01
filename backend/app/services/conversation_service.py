@@ -1,4 +1,5 @@
-"""
+"""Simple in-memory conversation history for Week 3 learning.
+
 History is process-local and is cleared when the API restarts. Use a database
 such as PostgreSQL/Supabase for persistent storage in a later iteration.
 """

@@ -2,6 +2,22 @@
 
 _Intelligent Message Processing & Response Platform_
 
+**Live demo:** https://indigo-ai-tau.vercel.app
+
+Indigo.ai is a full-stack LLM application. A user chats with an AI assistant, and for every message the FastAPI backend classifies the intent, validates the result, writes a reply and stores the conversation.
+
+## What it does
+- **Classifies intent with structured output:** a Groq-hosted LLM returns JSON (intent, risk, priority) that Pydantic validates before anything else uses it. Invalid output is rejected.
+- **Generates the reply:** a second LLM call writes a Markdown answer from the validated result.
+- **Remembers conversations:** chat history is saved, so follow-up questions work and old chats can be reopened.
+- **Streams responses** to a React + Vite frontend, with an incognito mode that saves nothing.
+
+## Tech stack
+Python, FastAPI, Groq LLM API, Instructor, Pydantic, SQLite, React, Vite. Deployed on Vercel (frontend) and Render (backend).
+
+## How it works (project guide)
+The rest of this README walks through how the project works and how to run it locally.
+
 A beginner-friendly AI project. You chat with **Indigo.ai**, an AI assistant in a React web app, and for every message the backend:
 
 1. **Week 1 – Understands it.** An LLM sorts the message into a fixed category (payment issue, order tracking, greeting…) and returns structured JSON. Pydantic checks that JSON before anything else uses it.
